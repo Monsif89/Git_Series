@@ -1,0 +1,147 @@
+@inherits LayoutComponentBase
+@inject IJSRuntime JS
+
+<!-- Sidebar Overlay (mobile) -->
+<div class="sidebar-overlay" @onclick="CloseMobileSidebar"></div>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <i class="bi bi-mortarboard-fill"></i>
+            <span>StageAcademique</span>
+        </div>
+        <button class="sidebar-toggle" @onclick="ToggleSidebar" title="Replier le menu">
+            <i class="bi bi-list"></i>
+        </button>
+    </div>
+
+    <div class="sidebar-section-title">Menu principal</div>
+
+    <div class="sidebar-nav">
+        <a href="/" class="sidebar-nav-item @GetActiveClass("/")">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span class="sidebar-nav-text">Dashboard</span>
+        </a>
+        <a href="/stagiaires" class="sidebar-nav-item @GetActiveClass("/stagiaires")">
+            <i class="bi bi-people-fill"></i>
+            <span class="sidebar-nav-text">Stagiaires</span>
+        </a>
+        <a href="/entreprises" class="sidebar-nav-item @GetActiveClass("/entreprises")">
+            <i class="bi bi-building"></i>
+            <span class="sidebar-nav-text">Entreprises</span>
+        </a>
+        <a href="/stages" class="sidebar-nav-item @GetActiveClass("/stages")">
+            <i class="bi bi-briefcase-fill"></i>
+            <span class="sidebar-nav-text">Stages</span>
+        </a>
+        <a href="/encadrants" class="sidebar-nav-item @GetActiveClass("/encadrants")">
+            <i class="bi bi-person-badge-fill"></i>
+            <span class="sidebar-nav-text">Encadrants</span>
+        </a>
+        <a href="/rapports" class="sidebar-nav-item @GetActiveClass("/rapports")">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span class="sidebar-nav-text">Rapports</span>
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">MA</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">Mohamed Admin</div>
+                <div class="sidebar-user-role">Administrateur</div>
+            </div>
+            <button class="sidebar-logout" title="Se deconnecter">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Top Bar -->
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="mobile-toggle" @onclick="ToggleMobileSidebar">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="breadcrumb">
+            <span>StageAcademique</span>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-active">@GetCurrentPageName()</span>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <div class="search-bar">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Rechercher..." />
+        </div>
+        <button class="topbar-icon">
+            <i class="bi bi-bell"></i>
+            <span class="notification-badge"></span>
+        </button>
+        <div class="topbar-avatar">MA</div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+    @Body
+</main>
+
+<div id="blazor-error-ui">
+    Une erreur non geree s'est produite.
+    <a href="" class="reload">Recharger</a>
+    <a class="dismiss">&#x1F5D9;</a>
+</div>
+
+@code {
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private string GetCurrentPageName()
+    {
+        var uri = Navigation.ToBaseRelativePath(Navigation.Uri);
+        return uri switch
+        {
+            "" => "Dashboard",
+            "stagiaires" => "Stagiaires",
+            "stagiaires/nouveau" => "Nouveau Stagiaire",
+            "entreprises" => "Entreprises",
+            "stages" => "Stages",
+            "encadrants" => "Encadrants",
+            "rapports" => "Rapports",
+            _ => "Page"
+        };
+    }
+
+    private string GetActiveClass(string href)
+    {
+        var currentUri = "/" + Navigation.ToBaseRelativePath(Navigation.Uri);
+        if (href == "/" && currentUri == "/") return "active";
+        if (href != "/" && currentUri.StartsWith(href)) return "active";
+        return "";
+    }
+
+    private async Task ToggleSidebar()
+    {
+        await JS.InvokeVoidAsync("gsapAnimations.toggleSidebar");
+    }
+
+    private async Task ToggleMobileSidebar()
+    {
+        await JS.InvokeVoidAsync("gsapAnimations.toggleMobileSidebar");
+    }
+
+    private async Task CloseMobileSidebar()
+    {
+        await JS.InvokeVoidAsync("gsapAnimations.toggleMobileSidebar");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("gsapAnimations.animateSidebar");
+        }
+    }
+}

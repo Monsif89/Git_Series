@@ -1,0 +1,155 @@
+@page "/stagiaires"
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Stagiaires - StageAcademique</PageTitle>
+
+<div class="page-header-actions">
+    <div>
+        <h1 class="page-title">Stagiaires</h1>
+        <p class="page-subtitle">Gestion des stagiaires inscrits</p>
+    </div>
+    <a href="/stagiaires/nouveau" class="btn btn-primary btn-rounded">
+        <i class="bi bi-plus-lg"></i>
+        Ajouter Stagiaire
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="filters-bar">
+    <div class="filter-search">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Rechercher un stagiaire..." @bind="searchQuery" @bind:event="oninput" />
+    </div>
+    <select class="filter-select" @bind="statusFilter">
+        <option value="">Tous les statuts</option>
+        <option value="Actif">Actif</option>
+        <option value="Termine">Termine</option>
+        <option value="En attente">En attente</option>
+    </select>
+    <select class="filter-select" @bind="entrepriseFilter">
+        <option value="">Toutes les entreprises</option>
+        <option value="TechCorp">TechCorp</option>
+        <option value="DataSoft">DataSoft</option>
+        <option value="CloudNet">CloudNet</option>
+        <option value="InnoSys">InnoSys</option>
+        <option value="CyberShield">CyberShield</option>
+    </select>
+</div>
+
+<!-- Stagiaires Cards Grid -->
+<div class="cards-grid">
+    @foreach (var stagiaire in GetFilteredStagiaires())
+    {
+        <div class="stagiaire-card">
+            <div class="stagiaire-card-header">
+                <div class="stagiaire-card-avatar" style="background: @stagiaire.AvatarColor;">
+                    @stagiaire.Initials
+                </div>
+                <div>
+                    <div class="stagiaire-card-name">@stagiaire.Nom @stagiaire.Prenom</div>
+                    <div class="stagiaire-card-email">@stagiaire.Email</div>
+                </div>
+            </div>
+            <div class="stagiaire-card-details">
+                <div class="stagiaire-card-detail">
+                    <i class="bi bi-building"></i>
+                    <span>@stagiaire.Entreprise</span>
+                </div>
+                <div class="stagiaire-card-detail">
+                    <i class="bi bi-calendar-range"></i>
+                    <span>@stagiaire.Periode</span>
+                </div>
+                <div class="stagiaire-card-detail">
+                    <i class="bi bi-file-text"></i>
+                    <span>@stagiaire.Sujet</span>
+                </div>
+            </div>
+            <div class="stagiaire-card-footer">
+                <span class="badge @GetBadgeClass(stagiaire.Statut)">@stagiaire.Statut</span>
+                <a href="/stagiaires/nouveau" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-pencil"></i>
+                    Modifier
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    <button class="pagination-btn" disabled><i class="bi bi-chevron-left"></i></button>
+    <button class="pagination-btn active">1</button>
+    <button class="pagination-btn">2</button>
+    <button class="pagination-btn">3</button>
+    <button class="pagination-btn"><i class="bi bi-chevron-right"></i></button>
+</div>
+
+@code {
+    private string searchQuery = "";
+    private string statusFilter = "";
+    private string entrepriseFilter = "";
+
+    private List<StagiaireItem> stagiaires = new()
+    {
+        new() { Nom = "Benali", Prenom = "Ahmed", Email = "a.benali@email.com", Entreprise = "TechCorp", Periode = "Jan - Mar 2026", Sujet = "Developpement Web", Statut = "Actif", AvatarColor = "#4F46E5", Initials = "AB" },
+        new() { Nom = "Idrissi", Prenom = "Sara", Email = "s.idrissi@email.com", Entreprise = "DataSoft", Periode = "Fev - Avr 2026", Sujet = "Data Science", Statut = "Actif", AvatarColor = "#10B981", Initials = "SI" },
+        new() { Nom = "Amrani", Prenom = "Youssef", Email = "y.amrani@email.com", Entreprise = "CloudNet", Periode = "Nov - Jan 2026", Sujet = "DevOps", Statut = "Termine", AvatarColor = "#F59E0B", Initials = "YA" },
+        new() { Nom = "Karimi", Prenom = "Fatima", Email = "f.karimi@email.com", Entreprise = "InnoSys", Periode = "Mar - Mai 2026", Sujet = "Intelligence Artificielle", Statut = "En attente", AvatarColor = "#EF4444", Initials = "FK" },
+        new() { Nom = "El Fassi", Prenom = "Omar", Email = "o.elfassi@email.com", Entreprise = "CyberShield", Periode = "Fev - Avr 2026", Sujet = "Cybersecurite", Statut = "Actif", AvatarColor = "#4F46E5", Initials = "OE" },
+        new() { Nom = "Bouzid", Prenom = "Leila", Email = "l.bouzid@email.com", Entreprise = "TechCorp", Periode = "Avr - Jun 2026", Sujet = "Mobile Development", Statut = "En attente", AvatarColor = "#818CF8", Initials = "LB" },
+    };
+
+    private IEnumerable<StagiaireItem> GetFilteredStagiaires()
+    {
+        var result = stagiaires.AsEnumerable();
+
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            var query = searchQuery.ToLower();
+            result = result.Where(s =>
+                s.Nom.ToLower().Contains(query) ||
+                s.Prenom.ToLower().Contains(query) ||
+                s.Email.ToLower().Contains(query));
+        }
+
+        if (!string.IsNullOrEmpty(statusFilter))
+            result = result.Where(s => s.Statut == statusFilter);
+
+        if (!string.IsNullOrEmpty(entrepriseFilter))
+            result = result.Where(s => s.Entreprise == entrepriseFilter);
+
+        return result;
+    }
+
+    private string GetBadgeClass(string statut) => statut switch
+    {
+        "Actif" => "badge-active",
+        "Termine" => "badge-ended",
+        "En attente" => "badge-pending",
+        _ => ""
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("gsapAnimations.animatePageTitle", ".page-title");
+            await JS.InvokeVoidAsync("gsapAnimations.animateCards", ".stagiaire-card");
+            await JS.InvokeVoidAsync("gsapAnimations.addHoverEffect", ".stagiaire-card");
+        }
+    }
+
+    private class StagiaireItem
+    {
+        public string Nom { get; set; } = "";
+        public string Prenom { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Entreprise { get; set; } = "";
+        public string Periode { get; set; } = "";
+        public string Sujet { get; set; } = "";
+        public string Statut { get; set; } = "";
+        public string AvatarColor { get; set; } = "";
+        public string Initials { get; set; } = "";
+    }
+}
