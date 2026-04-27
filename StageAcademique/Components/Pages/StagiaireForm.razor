@@ -1,0 +1,107 @@
+@page "/stagiaires/nouveau"
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Nouveau Stagiaire - StageAcademique</PageTitle>
+
+<div class="page-header">
+    <h1 class="page-title">Nouveau Stagiaire</h1>
+    <p class="page-subtitle">Ajouter un nouveau stagiaire au systeme</p>
+</div>
+
+<div class="form-container" id="stagiaire-form">
+    <div class="form-grid">
+        <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-input" placeholder="Ex: Benali" @bind="nom" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Prenom</label>
+            <input type="text" class="form-input" placeholder="Ex: Ahmed" @bind="prenom" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="Ex: ahmed.benali@email.com" @bind="email" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Telephone</label>
+            <input type="tel" class="form-input" placeholder="Ex: +212 6XX XXX XXX" @bind="telephone" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Entreprise</label>
+            <select class="form-select" @bind="entreprise">
+                <option value="">Selectionner une entreprise</option>
+                <option value="TechCorp">TechCorp</option>
+                <option value="DataSoft">DataSoft</option>
+                <option value="CloudNet">CloudNet</option>
+                <option value="InnoSys">InnoSys</option>
+                <option value="CyberShield">CyberShield</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Encadrant</label>
+            <select class="form-select" @bind="encadrant">
+                <option value="">Selectionner un encadrant</option>
+                <option value="Prof. Hassan Alaoui">Prof. Hassan Alaoui</option>
+                <option value="Dr. Nadia Tazi">Dr. Nadia Tazi</option>
+                <option value="Ing. Karim Bennani">Ing. Karim Bennani</option>
+                <option value="Prof. Salma Ouazzani">Prof. Salma Ouazzani</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Date de debut</label>
+            <input type="date" class="form-input" @bind="dateDebut" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Date de fin</label>
+            <input type="date" class="form-input" @bind="dateFin" />
+        </div>
+        <div class="form-group full-width">
+            <label class="form-label">Sujet du stage</label>
+            <textarea class="form-textarea" placeholder="Decrivez le sujet du stage..." @bind="sujet"></textarea>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button class="btn btn-primary" @onclick="HandleSave">
+            <i class="bi bi-check-lg"></i>
+            Enregistrer
+        </button>
+        <button class="btn btn-secondary" @onclick="HandleCancel">
+            <i class="bi bi-x-lg"></i>
+            Annuler
+        </button>
+    </div>
+</div>
+
+@code {
+    private string nom = "";
+    private string prenom = "";
+    private string email = "";
+    private string telephone = "";
+    private string entreprise = "";
+    private string encadrant = "";
+    private DateTime? dateDebut;
+    private DateTime? dateFin;
+    private string sujet = "";
+
+    private void HandleSave()
+    {
+        Navigation.NavigateTo("/stagiaires");
+    }
+
+    private void HandleCancel()
+    {
+        Navigation.NavigateTo("/stagiaires");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("gsapAnimations.animatePageTitle", ".page-title");
+            await JS.InvokeVoidAsync("gsapAnimations.slideInForm", "#stagiaire-form");
+        }
+    }
+}

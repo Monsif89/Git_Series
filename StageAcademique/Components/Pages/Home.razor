@@ -1,0 +1,225 @@
+@page "/"
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Dashboard - StageAcademique</PageTitle>
+
+<div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Vue d'ensemble de vos stages academiques</p>
+</div>
+
+<!-- KPI Cards -->
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-icon purple">
+            <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div class="kpi-info">
+            <div class="kpi-value" id="stagiaire-count">0</div>
+            <div class="kpi-label">Stagiaires</div>
+            <div class="kpi-trend up">&#8593; 12% ce mois</div>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon green">
+            <i class="bi bi-clipboard-check-fill"></i>
+        </div>
+        <div class="kpi-info">
+            <div class="kpi-value" id="stage-count">0</div>
+            <div class="kpi-label">Stages Actifs</div>
+            <div class="kpi-trend up">&#8593; 8% ce mois</div>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon amber">
+            <i class="bi bi-building"></i>
+        </div>
+        <div class="kpi-info">
+            <div class="kpi-value" id="entreprise-count">0</div>
+            <div class="kpi-label">Entreprises</div>
+            <div class="kpi-trend up">&#8593; 3 nouvelles</div>
+        </div>
+    </div>
+    <div class="kpi-card">
+        <div class="kpi-icon red">
+            <i class="bi bi-file-earmark-text-fill"></i>
+        </div>
+        <div class="kpi-info">
+            <div class="kpi-value" id="rapport-count">0</div>
+            <div class="kpi-label">Rapports Soumis</div>
+            <div class="kpi-trend down">&#8595; 5% ce mois</div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Section -->
+<div class="chart-section">
+    <h3>Statistiques Mensuelles</h3>
+    <div class="chart-placeholder" id="chart-placeholder">
+        <div style="text-align: center;">
+            <i class="bi bi-bar-chart-line" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+            Graphique ici (Chart.js / ApexCharts)
+        </div>
+    </div>
+</div>
+
+<!-- Recent Stages Table -->
+<div class="table-section">
+    <div class="table-header">
+        <h3>Derniers stages ajoutes</h3>
+        <a href="/stages" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-right"></i>
+            Voir tout
+        </a>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Stagiaire</th>
+                <th>Entreprise</th>
+                <th>Sujet</th>
+                <th>Periode</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar bg-primary">AB</div>
+                        <div class="user-info-text">
+                            <div class="name">Ahmed Benali</div>
+                            <div class="email">a.benali&#64;email.com</div>
+                        </div>
+                    </div>
+                </td>
+                <td>TechCorp</td>
+                <td>Developpement Web</td>
+                <td>Jan - Mar 2026</td>
+                <td><span class="badge badge-active">Actif</span></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar bg-secondary">SI</div>
+                        <div class="user-info-text">
+                            <div class="name">Sara Idrissi</div>
+                            <div class="email">s.idrissi&#64;email.com</div>
+                        </div>
+                    </div>
+                </td>
+                <td>DataSoft</td>
+                <td>Data Science</td>
+                <td>Fev - Avr 2026</td>
+                <td><span class="badge badge-active">Actif</span></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar bg-accent">YA</div>
+                        <div class="user-info-text">
+                            <div class="name">Youssef Amrani</div>
+                            <div class="email">y.amrani&#64;email.com</div>
+                        </div>
+                    </div>
+                </td>
+                <td>CloudNet</td>
+                <td>DevOps</td>
+                <td>Nov - Jan 2026</td>
+                <td><span class="badge badge-ended">Termine</span></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar bg-danger">FK</div>
+                        <div class="user-info-text">
+                            <div class="name">Fatima Karimi</div>
+                            <div class="email">f.karimi&#64;email.com</div>
+                        </div>
+                    </div>
+                </td>
+                <td>InnoSys</td>
+                <td>Intelligence Artificielle</td>
+                <td>Mar - Mai 2026</td>
+                <td><span class="badge badge-pending">En attente</span></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar bg-primary">OE</div>
+                        <div class="user-info-text">
+                            <div class="name">Omar El Fassi</div>
+                            <div class="email">o.elfassi&#64;email.com</div>
+                        </div>
+                    </div>
+                </td>
+                <td>CyberShield</td>
+                <td>Cybersecurite</td>
+                <td>Fev - Avr 2026</td>
+                <td><span class="badge badge-active">Actif</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Timeline - Recent Activities -->
+<div class="timeline-section scroll-animate">
+    <h3>Activites Recentes</h3>
+    <div class="timeline">
+        <div class="timeline-item scroll-animate">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-title">Nouveau stagiaire inscrit : Ahmed Benali</div>
+                <div class="timeline-time">Il y a 2 heures</div>
+            </div>
+        </div>
+        <div class="timeline-item scroll-animate">
+            <div class="timeline-dot green"></div>
+            <div class="timeline-content">
+                <div class="timeline-title">Rapport soumis par Sara Idrissi</div>
+                <div class="timeline-time">Il y a 5 heures</div>
+            </div>
+        </div>
+        <div class="timeline-item scroll-animate">
+            <div class="timeline-dot amber"></div>
+            <div class="timeline-content">
+                <div class="timeline-title">Stage termine : Youssef Amrani - CloudNet</div>
+                <div class="timeline-time">Hier, 16:30</div>
+            </div>
+        </div>
+        <div class="timeline-item scroll-animate">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <div class="timeline-title">Nouvelle entreprise partenaire : InnoSys</div>
+                <div class="timeline-time">Hier, 10:15</div>
+            </div>
+        </div>
+        <div class="timeline-item scroll-animate">
+            <div class="timeline-dot red"></div>
+            <div class="timeline-content">
+                <div class="timeline-title">Rapport en retard : Omar El Fassi</div>
+                <div class="timeline-time">Il y a 2 jours</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("gsapAnimations.animatePageTitle", ".page-title");
+            await JS.InvokeVoidAsync("gsapAnimations.animateCards", ".kpi-card");
+            await JS.InvokeVoidAsync("gsapAnimations.addHoverEffect", ".kpi-card");
+            await JS.InvokeVoidAsync("gsapAnimations.animateCounter", "#stagiaire-count", 127);
+            await JS.InvokeVoidAsync("gsapAnimations.animateCounter", "#stage-count", 45);
+            await JS.InvokeVoidAsync("gsapAnimations.animateCounter", "#entreprise-count", 32);
+            await JS.InvokeVoidAsync("gsapAnimations.animateCounter", "#rapport-count", 89);
+            await JS.InvokeVoidAsync("gsapAnimations.scaleIn", "#chart-placeholder");
+            await JS.InvokeVoidAsync("gsapAnimations.animateTableRows", ".data-table tbody tr");
+            await JS.InvokeVoidAsync("gsapAnimations.animateOnScroll", ".scroll-animate");
+        }
+    }
+}
